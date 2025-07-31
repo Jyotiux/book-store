@@ -1,70 +1,140 @@
-# Getting Started with Create React App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Bookstore App
 
-## Available Scripts
+This is a full-stack web application built using React.js and Firebase. It allows users to register, login, list books for sale, view book details, place orders, and view received orders.
 
-In the project directory, you can run:
+## Features
 
-### `npm start`
+* Firebase Authentication (Email/Password and Google Sign-in)
+* List and view books
+* Place orders for books
+* View orders placed on your listed books
+* Firebase Realtime Database for storing data
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Tech Stack
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+Frontend:
 
-### `npm test`
+* React.js
+* React Bootstrap
+* React Router
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Backend:
 
-### `npm run build`
+* Firebase Authentication
+* Firebase Realtime Database
+* Firebase Storage (optional for book images)
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Project Structure
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```
+src/
+├── components/
+│   └── Card.jsx
+├── context/
+│   └── Firebase.js
+├── pages/
+│   ├── Home.jsx
+│   ├── Detail.jsx
+│   ├── Listing.jsx
+│   ├── Login.jsx
+│   ├── Register.jsx
+│   ├── Orders.jsx
+│   └── ViewOrderDetails.jsx
+└── App.jsx
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Getting Started
 
-### `npm run eject`
+1. Clone the repository
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+```
+git clone https://github.com/yourusername/bookstore-app.git
+cd bookstore-app
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+2. Install dependencies
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+```
+npm install
+```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+3. Set up Firebase
 
-## Learn More
+* Go to [https://console.firebase.google.com](https://console.firebase.google.com) and create a new project
+* Enable Email/Password and Google authentication
+* Enable Realtime Database
+* (Optional) Enable Firebase Storage for book images
+* Copy your Firebase configuration and add it to `Firebase.js` inside the context folder
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Example:
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+```
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+  databaseURL: "https://YOUR_PROJECT_ID.firebaseio.com",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_PROJECT_ID.appspot.com",
+  messagingSenderId: "SENDER_ID",
+  appId: "APP_ID"
+};
+```
 
-### Code Splitting
+4. Run the app
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+```
+npm start
+```
 
-### Analyzing the Bundle Size
+This will start the app at [http://localhost:3000](http://localhost:3000)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+## Firebase Functions
 
-### Making a Progressive Web App
+Authentication:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+* signupUserWithEmailAndPassword
+* signinUserWithEmailAndPass
+* signinWithGoogle
 
-### Advanced Configuration
+Books:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+* handleCreateNewListing
+* listAllBooks
+* getBookById
+* getImageURL (optional for images)
 
-### Deployment
+Orders:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+* placeOrder
+* getOrders
+* fetchMyBooks
 
-### `npm run build` fails to minify
+## Routes
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+* `/` – Home page showing all books
+* `/book/view/:bookId` – View book details and place order
+* `/book/list` – Add a new book
+* `/login` – Login page
+* `/register` – Registration page
+* `/books/orders/:bookId` – View orders for your listed book
+
+## Optional Improvements
+
+* Add image upload functionality
+* Add search and filter
+* Add validation to forms
+* Add admin analytics
+* Improve UI styling
+
+## Deployment
+
+To deploy using Firebase Hosting:
+
+```
+npm run build
+firebase login
+firebase init
+firebase deploy
+```
+
