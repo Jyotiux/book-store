@@ -12,7 +12,7 @@ https://bookify-d15fd.web.app/
 * List and view books
 * Place orders for books
 * View orders placed on your listed books
-* Firebase Realtime Database for storing data
+* Firebase Database for storing data
 
 ## Tech Stack
 
@@ -25,7 +25,7 @@ Frontend:
 Backend:
 
 * Firebase Authentication
-* Firebase Realtime Database
+* Firebase Database
 * Firebase Storage (optional for book images)
 
 ## Project Structure
