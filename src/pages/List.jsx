@@ -1,91 +1,89 @@
 import React, { useState } from "react";
-import Button from "react-bootstrap/Button";
-import Form from "react-bootstrap/Form";
-
-import { useFirebase } from "../context/Firebase"; // Importing custom Firebase context
+import { Container, Row, Col, Card, Button, Form } from "react-bootstrap";
+import { useFirebase } from "../context/Firebase";
 
 const ListingPage = () => {
-  const firebase = useFirebase(); // Access Firebase functions from context
+  const firebase = useFirebase();
 
-  // State variables for form fields
   const [name, setName] = useState("");
   const [isbnNumber, setIsbnNumber] = useState("");
   const [price, setPrice] = useState("");
-  const [coverPic] = useState(""); // Placeholder for image (not used currently)
+  const [coverPic] = useState("");
 
-  // Handle form submission
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Prevent default form submission (page reload)
+    e.preventDefault();
     try {
-      // Call Firebase function to create a new book listing
-      await firebase.handleCreateNewListing(name, isbnNumber, price, coverPic);
-      alert("Book listing added successfully!");
+      await firebase.handleCreateNewListing(
+        name,
+        isbnNumber,
+        price,
+        coverPic
+      );
 
-      // Reset form fields after successful submission
+      alert("Book listing added successfully!");
       setName("");
       setIsbnNumber("");
       setPrice("");
     } catch (error) {
-      // Handle and display errors
       console.error("Error creating listing:", error);
       alert("Failed to add book listing.");
     }
   };
 
   return (
-    <div className="container mt-5">
-      {/* Book Listing Form */}
-      <Form onSubmit={handleSubmit}>
-        {/* Book Name Input */}
-        <Form.Group className="mb-3" controlId="formBasicEmail">
-          <Form.Label>Enter Book Name</Form.Label>
-          <Form.Control
-            onChange={(e) => setName(e.target.value)}
-            value={name}
-            type="text"
-            placeholder="Book name"
-          />
-        </Form.Group>
+    <Container className="my-5">
+      <Row className="justify-content-center">
+        <Col md={8} lg={6}>
+          <Card className="shadow-sm">
+            <Card.Body>
+              <h3 className="text-center mb-4">Add New Book</h3>
 
-        {/* ISBN Input */}
-        <Form.Group className="mb-3" controlId="formBasicPassword">
-          <Form.Label>ISBN</Form.Label>
-          <Form.Control
-            onChange={(e) => setIsbnNumber(e.target.value)}
-            value={isbnNumber}
-            type="text"
-            placeholder="ISBN Number"
-          />
-        </Form.Group>
+              <Form onSubmit={handleSubmit}>
+                <Form.Group className="mb-3">
+                  <Form.Label>Book Name</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="Enter book name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    required
+                  />
+                </Form.Group>
 
-        {/* Price Input */}
-        <Form.Group className="mb-3" controlId="formBasicPassword">
-          <Form.Label>Price</Form.Label>
-          <Form.Control
-            onChange={(e) => setPrice(e.target.value)}
-            value={price}
-            type="text"
-            placeholder="Enter Price"
-          />
-        </Form.Group>
+                <Form.Group className="mb-3">
+                  <Form.Label>ISBN</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="Enter ISBN number"
+                    value={isbnNumber}
+                    onChange={(e) => setIsbnNumber(e.target.value)}
+                    required
+                  />
+                </Form.Group>
 
-        {/* File upload for cover image (currently disabled) */}
-        {/* 
-        <Form.Group className="mb-3" controlId="formBasicPassword">
-          <Form.Label>Cover Pic</Form.Label>
-          <Form.Control
-            onChange={(e) => setCoverPic(e.target.files[0])}
-            type="file"
-          />
-        </Form.Group>
-        */}
+                <Form.Group className="mb-4">
+                  <Form.Label>Price</Form.Label>
+                  <Form.Control
+                    type="number"
+                    placeholder="Enter price"
+                    value={price}
+                    onChange={(e) => setPrice(e.target.value)}
+                    required
+                  />
+                </Form.Group>
 
-        {/* Submit Button */}
-        <Button variant="primary" type="submit">
-          Create
-        </Button>
-      </Form>
-    </div>
+                <div className="d-grid">
+                  <Button variant="primary" type="submit">
+                    Create Listing
+                  </Button>
+                </div>
+              </Form>
+
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
+    </Container>
   );
 };
 

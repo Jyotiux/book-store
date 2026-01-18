@@ -1,74 +1,115 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
-
-import { useFirebase } from '../context/Firebase';
+import {
+  Container,
+  Row,
+  Col,
+  Card,
+  Button,
+  Form,
+  Alert,
+} from "react-bootstrap";
+import { useFirebase } from "../context/Firebase";
 
 const LoginPage = () => {
-  const firebase = useFirebase(); // Access Firebase functions from context
-  const navigate = useNavigate(); // React Router navigation hook
+  const firebase = useFirebase();
+  const navigate = useNavigate();
 
-  // State variables to hold email and password inputs
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  // If user is already logged in, redirect to home page
   useEffect(() => {
     if (firebase.isLoggedIn) {
       navigate("/");
     }
   }, [firebase, navigate]);
 
-  // Handle form submission for login with email and password
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Prevent default form reload
-    console.log('Login a user');
-    const result = await firebase.signinUserWithEmailAndPass(email, password);
-    console.log('successful', result);
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+
+    try {
+      await firebase.signinUserWithEmailAndPass(email, password);
+    } catch (err) {
+      console.error(err);
+
+      if (err.code === "auth/invalid-credential") {
+        setError("Invalid email or password");
+      } else {
+        setError("Something went wrong. Please try again.");
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="container">
-      {/* Email/Password Login Form */}
-      <Form onSubmit={handleSubmit}>
-        {/* Email Field */}
-        <Form.Group className="mb-3" controlId="formBasicEmail">
-          <Form.Label>Email address</Form.Label>
-          <Form.Control
-            onChange={(e) => setEmail(e.target.value)}
-            value={email}
-            type="email"
-            placeholder="Enter email"
-          />
-          <Form.Text className="text-muted">
-            We'll never share your email with anyone else.
-          </Form.Text>
-        </Form.Group>
+    <Container className="my-5">
+      <Row className="justify-content-center">
+        <Col md={6} lg={5}>
+          <Card className="shadow-sm">
+            <Card.Body>
+              <h3 className="text-center mb-4">Login</h3>
 
-        {/* Password Field */}
-        <Form.Group className="mb-3" controlId="formBasicPassword">
-          <Form.Label>Password</Form.Label>
-          <Form.Control
-            onChange={(e) => setPassword(e.target.value)}
-            value={password}
-            type="password"
-            placeholder="Password"
-          />
-        </Form.Group>
+              {error && (
+                <Alert variant="danger" className="text-center">
+                  {error}
+                </Alert>
+              )}
 
-        {/* Login Button */}
-        <Button variant="primary" type="submit">
-          Login
-        </Button>
-      </Form>
+              <Form onSubmit={handleSubmit}>
+                <Form.Group className="mb-3">
+                  <Form.Label>Email address</Form.Label>
+                  <Form.Control
+                    type="email"
+                    placeholder="Enter email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                  />
+                </Form.Group>
 
-      {/* Google Sign-In Option */}
-      <h1 className="mt-5 p-5">OR</h1>
-      <Button onClick={firebase.signinWithGoogle} variant="danger">
-        Sign in With Google
-      </Button>
-    </div>
+                <Form.Group className="mb-4">
+                  <Form.Label>Password</Form.Label>
+                  <Form.Control
+                    type="password"
+                    placeholder="Password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                  />
+                </Form.Group>
+
+                <div className="d-grid mb-3">
+                  <Button
+                    variant="primary"
+                    type="submit"
+                    disabled={loading}
+                  >
+                    {loading ? "Logging in..." : "Login"}
+                  </Button>
+                </div>
+              </Form>
+
+              <div className="text-center text-muted my-3">OR</div>
+
+              <div className="d-grid">
+                <Button
+                  variant="danger"
+                  onClick={firebase.signinWithGoogle}
+                  disabled={loading}
+                >
+                  Sign in with Google
+                </Button>
+              </div>
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
+    </Container>
   );
 };
 

@@ -3,34 +3,33 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import BookCard from "../components/Card"; // Component to display individual book details
 import { useFirebase } from "../context/Firebase"; // Firebase context hook
+import Loader from "../components/Loader";
+
 
 const HomePage = () => {
   const firebase = useFirebase(); // Access Firebase functions from context
   const [books, setBooks] = useState([]); // State to hold the list of books
+  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    // Function to fetch all books from Firebase
-    const fetchBooks = async () => {
-      try {
-        const data = await firebase.listAllBooks(); // Fetch data from Firebase
-        if (data) {
-          // Convert object to array format with 'id' included
-          const booksArray = Object.entries(data).map(([id, book]) => ({
-            id,
-            ...book,
-          }));
-          setBooks(booksArray); // Store books in state
-        } else {
-          setBooks([]); // If no books, set empty array
-        }
-      } catch (error) {
-        console.error("Error fetching books:", error);
-        setBooks([]); // On error, clear list
-      }
-    };
 
-    fetchBooks(); // Call on component mount
-  }, [firebase]);
+useEffect(() => {
+  setLoading(true);
+
+  firebase.listAllBooks().then((booksObj) => {
+    if (!booksObj) {
+      setBooks([]);
+    } else {
+      const booksArray = Object.entries(booksObj).map(([id, data]) => ({
+        id,
+        ...data,
+      }));
+      setBooks(booksArray);
+    }
+
+    setLoading(false);
+  });
+}, [firebase]);
+if (loading) return <Loader />;
 
   return (
     <div className="container mt-5">
